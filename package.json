@@ -1,0 +1,23 @@
+{
+  "name": "cards",
+  "version": "1.0.0",
+  "description": "cards server",
+  "main": "servjs.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "mocha": "^8.0.1",
+    "pm2": "^4.4.0",
+    "ws": "^7.3.0",
+    "wscat": "^4.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nicholasbulka/cards.git"
+  },
+  "author": "Nicholas Bulka",
+  "license": "MIT"
+}
