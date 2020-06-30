@@ -2,22 +2,31 @@
   "name": "cards",
   "version": "1.0.0",
   "description": "cards server",
-  "main": "servjs.js",
+  "main": "build/index.js",
   "dependencies": {
-    "@types/express": "^4.17.6",
+    "@types/dotenv": "^8.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
     "mocha": "^8.0.1",
     "pm2": "^4.4.0",
+    "tslint": "^6.1.2",
     "typescript": "^3.9.5",
     "ws": "^7.3.0",
     "wscat": "^4.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/express-ws": "^3.0.0",
+    "@types/node": "^14.0.14",
+    "winston": "^3.3.3"
+  },
   "scripts": {
-    "test": "mocha",
-    "tsc": "tsc"
+    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node .",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",

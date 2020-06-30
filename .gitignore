@@ -1,1 +1,6 @@
 .env
+*.swp
+combined.log
+error.log
+/build
+
