@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
 import * as dotenv from "dotenv";
+import * as ws from 'ws';
 import expressWs from 'express-ws';
 import express from 'express';
 import winston from 'winston';
@@ -10,7 +11,10 @@ dotenv.config();
 
 const logger = winston.createLogger({
   level: 'info',
-  format: winston.format.json(),
+  format: winston.format.combine(
+    winston.format.splat(),
+    winston.format.simple()
+  ),
   defaultMeta: { service: 'user-service' },
   transports: [
     //
@@ -64,24 +68,34 @@ switch(env){
 
 server.listen(process.env.PORT);
 
-const { app, getWss, applyTo } : expressWs.Instance = expressWs(eApp, server);
+const wsInstance : expressWs.Instance = expressWs(eApp, server);
 
-applyTo({
-    get() { return this; }
-});
 
-getWss().clients.forEach(ws => {
-    if (ws.readyState !== ws.OPEN) {
-        ws.terminate();
+wsInstance.getWss().clients.forEach(socket => {
+    if (socket.readyState !== ws.OPEN) {
+        socket.terminate();
         return;
     }
-    ws.ping();
+    socket.ping();
 });
 
-app.ws('/', (ws, req) => {
-    ws.on('message', msg => {
-        ws.send('got it');
-        // info: test message my string {}
-        logger.log('info', 'test message %s', 'my string');
+wsInstance.app.ws('/', (socket, req) => {
+    socket.on('message', msg => {
+      logger.log('info', "received: %s", msg);
     });
 });
+
+const router = express.Router();
+router.ws(
+    '/:id',
+    (socket, req, next) => { next(); },
+    (socket, req, next) => {
+        socket.send(req.params.id);
+
+        socket.on('close', (code, reason) => {
+          logger.log('info', 'code %s', code);
+          logger.log('info', 'reason %s', reason);
+        });
+    }
+);
+wsInstance.app.use('/socket', router);
