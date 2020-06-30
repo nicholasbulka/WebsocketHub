@@ -33,7 +33,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const eApp: express.Application = express();
-let server: http.Server = http.createServer();
+let server: http.Server|https.Server = http.createServer();
 
 const env = process.env.ENV;
 
@@ -64,8 +64,7 @@ switch(env){
 
 server.listen(process.env.PORT);
 
-const { app, getWss, applyTo } = expressWs(eApp, server);
-
+const { app, getWss, applyTo } : expressWs.Instance = expressWs(eApp, server);
 
 applyTo({
     get() { return this; }
