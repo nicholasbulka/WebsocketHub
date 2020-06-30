@@ -47,12 +47,14 @@ switch(env){
       cert: fs.readFileSync(fc),
       key: fs.readFileSync(key)
     });
+    break;
   }
   case 'localSSL': {
     server = https.createServer({
       cert: fs.readFileSync('/usr/local/etc/ssl/certs/self-signed.crt'),
       key: fs.readFileSync('/usr/local/etc/ssl/private/self-signed.key')
     });
+    break;
   }
   default : {
     server = http.createServer();
