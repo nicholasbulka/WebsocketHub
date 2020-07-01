@@ -25,6 +25,8 @@ const isUsernameTaken = (username : string) => {
 
 const RoomController = (socket : ws, req : express.Request) => {
 
+  sendMessage(socket, {some:"message"});
+
   socket.on('message', (msg : string|Buffer|ArrayBuffer|Buffer[]) => {
 
     if(isJSON(msg) === false) {
