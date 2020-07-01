@@ -1,21 +1,16 @@
 import express from 'express';
 import expressWs from 'express-ws';
 import logger from '../util/logger'
+import RoomController from '../controllers/RoomController';
+import { isJSON } from '../util/util';
 
 const wsInstance : expressWs.Instance = expressWs(express());
-const socketRouter = express.Router();
+const roomRouter = express.Router();
 
-socketRouter.ws(
-    '/:id',
-    (socket, req, next) => { next(); },
-    (socket, req, next) => {
-        socket.send(req.params.id);
 
-        socket.on('close', (code, reason) => {
-          logger.log('info', 'coder %s', code);
-          logger.log('info', 'reason %s', reason);
-        });
-    }
+roomRouter.ws(
+    '/:id', RoomController
+
 );
 
-export default socketRouter
+export default roomRouter

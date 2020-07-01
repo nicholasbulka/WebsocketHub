@@ -2,11 +2,10 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
 import * as dotenv from "dotenv";
-import * as ws from 'ws';
 import expressWs from 'express-ws';
 import express from 'express';
 import logger  from './util/logger';
-import socketRouter from './routes/router';
+import roomRouter from './routes/router';
 
 dotenv.config();
 
@@ -45,4 +44,4 @@ server.listen(process.env.PORT);
 const wsInstance : expressWs.Instance = expressWs(eApp, server);
 
 
-wsInstance.app.use('/socket', socketRouter);
+wsInstance.app.use('/room', roomRouter);
