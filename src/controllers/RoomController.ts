@@ -49,10 +49,14 @@ const RoomController = (socket : ws, req : express.Request) => {
         }
         break;
 
-      case 'message':
+      case 'moveCard':
         // send message to all connected users
         users.forEach(user => {
-          sendMessage(user.socket, {method: 'update', params: {message: data.params.message}})
+          sendMessage(user.socket, {method: 'updateMoveCard',
+            params: {cardId: data.params.cardId,
+            location: {x:data.params.location.x,
+                      y:data.params.location.y,
+                      z:data.params.location.z}}});
         })
         break;
     }

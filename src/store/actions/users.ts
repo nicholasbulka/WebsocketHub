@@ -1,0 +1,26 @@
+// src/store/actions/user.ts
+import { User, SET_USER_ROLE, ADD_USER,  SET_LAST_USER_ACTIVITY, UserActionTypes } from '../types/users'
+
+export const setUserRole = (userRole: string, userId: string) : UserActionTypes => {
+  return {
+    type: SET_USER_ROLE,
+    userRole,
+    userId
+  }
+}
+
+export const addUser = (user: User) : UserActionTypes => {
+  return {
+    type: ADD_USER,
+    user
+  }
+}
+
+export const setLastUserActivity = (userId : string, lastActivity : string, lastActivityTime : number) : UserActionTypes => {
+  return {
+    type: SET_LAST_USER_ACTIVITY,
+    userId,
+    lastActivity,
+    lastActivityTime
+  }
+}
