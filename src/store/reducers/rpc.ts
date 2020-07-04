@@ -1,6 +1,5 @@
 // src/store/reducers/rpc.ts
 import { AnyAction, Reducer } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 
 import {
   RpcState,

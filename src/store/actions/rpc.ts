@@ -34,15 +34,15 @@ export const sendRpcNotification = (rpc: RpcNotification): ThunkResult<void> =>
     // const socket = getState().socket;
     const sendMessage = (socket : ws, data : object) => {
 
-    if(isJSON(JSON.stringify(data)) === false) {
-      logger.info(JSON.stringify(data));
-    }
+      if(isJSON(JSON.stringify(data)) === false) {
+        logger.info(JSON.stringify(data));
+      }
 
-    const d = JSON.stringify({
-      ...data
-    });
-    dispatch({ type: SEND_RPC_NOTIFICATION, rpc });
-    return socket.send(d)
+      const d = JSON.stringify({
+        ...data
+      });
+      dispatch({ type: SEND_RPC_NOTIFICATION, rpc });
+      return socket.send(d);
 
     }
   }

@@ -1,5 +1,7 @@
 import * as ws from 'ws';
-import { isJSON } from '../util/util';
+import { isJSON, randomItemId } from '../util/util';
+import { reducerStore } from '../store/reducers';
+import { User } from '../store/types/users';
 
 const users : {username: string, socket : ws}[] = [];
 
@@ -24,7 +26,23 @@ const isUsernameTaken = (username : string) => {
 
 const SocketController = (socket : ws ) => {
 
-  sendMessage(socket, {some:"message"});
+  const store = reducerStore();
+  const id = randomItemId(store.getState().users);
+  const dateNow = Date.now();
+
+  const user : User = {
+    socket,
+    username: 'user-' + id,
+    joined: dateNow,
+    log: 'created : ' + dateNow.toString(),
+    lastActivity: 'created : ' + dateNow.toString(),
+    role: 'user',
+    userId: '001'+id,
+    itemId: id,
+    location: {x:1,y:2,z:0}
+  }
+
+  store.dispatch({type: "ADD_USER", user});
 
   socket.on('message', (msg : string|Buffer|ArrayBuffer|Buffer[]) => {
 
@@ -50,8 +68,8 @@ const SocketController = (socket : ws ) => {
 
       case 'moveCard':
         // send message to all connected users
-        users.forEach(user => {
-          sendMessage(user.socket, {method: 'updateMoveCard',
+        users.forEach(listener => {
+          sendMessage(listener.socket, {method: 'updateMoveCard',
             params: {cardId: data.params.cardId,
             location: {x:data.params.location.x,
                       y:data.params.location.y,

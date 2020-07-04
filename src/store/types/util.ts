@@ -3,3 +3,8 @@ export interface Vec3 {
   y: number
   z: number
 }
+
+export interface Item {
+  itemId: string
+  location: Vec3
+}

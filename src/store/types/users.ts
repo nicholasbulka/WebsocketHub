@@ -1,8 +1,9 @@
 import * as ws from 'ws';
 import { AnyAction } from 'redux';
+import { Item } from '../types/util';
 
 // src/store/types/user.ts
-export interface User {
+export interface User extends Item {
   socket: ws
   username: string
   joined: number

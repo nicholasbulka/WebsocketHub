@@ -1,6 +1,7 @@
 import logger from './logger';
+import { Item } from '../store/types/util';
 
-const isJSON = (str : string|ArrayBuffer|Buffer|Buffer[]) => {
+export const isJSON = (str : string|ArrayBuffer|Buffer|Buffer[]) => {
     try {
         const obj = JSON.parse(str.toString());
         if (obj && typeof obj === 'object' && obj !== null) {
@@ -12,4 +13,12 @@ const isJSON = (str : string|ArrayBuffer|Buffer|Buffer[]) => {
     return false;
 }
 
-export {isJSON};
+export const randomItemId = (restricted : Item[]) : string => {
+
+    const rand = Math.floor(Math.random() * 10000).toString();
+    if (restricted.filter(e => e.itemId === rand).length > 0) {
+        return rand.toString();
+    } else {
+        return randomItemId(restricted);
+    }
+}

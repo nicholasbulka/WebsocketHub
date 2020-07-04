@@ -1,12 +1,9 @@
 // src/store/types/cardcollection.ts
-import { Card } from './card';
-import { Vec3 } from './util';
+import { Item } from './util';
 import { AnyAction } from 'redux';
 
-export interface CardCollection {
-  cards: Card[]
-  location: Vec3
-  itemId: string
+export interface CardCollection extends Item{
+  cardCollectionId: string
   tsType: string
 
 }
@@ -27,7 +24,6 @@ interface FlipCardCollection extends AnyAction{
 interface MoveCardCollection extends AnyAction{
   type: typeof MOVE_CARD_COLLECTION
   cardId: string
-  location: Vec3
 }
 
 interface CreateCardCollection extends AnyAction{
