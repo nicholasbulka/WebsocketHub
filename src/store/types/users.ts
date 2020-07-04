@@ -1,4 +1,5 @@
 import * as ws from 'ws';
+import { AnyAction } from 'redux';
 
 // src/store/types/user.ts
 export interface User {
@@ -18,18 +19,18 @@ export const SET_USER_ROLE = 'SET_USER_ROLE';
 export const ADD_USER = 'ADD_USER';
 export const SET_LAST_USER_ACTIVITY = 'SET_LAST_USER_ACTIVITY';
 
-interface SetUserRoleAction {
+interface SetUserRoleAction extends AnyAction{
   type: typeof SET_USER_ROLE
   userRole: string
   userId: string
 }
 
-interface AddUser {
+interface AddUser extends AnyAction{
   type: typeof ADD_USER
   user: User
 }
 
-interface SetLastUserActivityAction {
+interface SetLastUserActivityAction extends AnyAction{
   type: typeof SET_LAST_USER_ACTIVITY
   userId: string
   lastActivity: string

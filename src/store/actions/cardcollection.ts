@@ -1,7 +1,8 @@
 // src/store/actions/card.ts
 import { Vec3 } from '../types/util';
 
-import { CardCollection, FLIP_CARD_COLLECTION, MOVE_CARD_COLLECTION, CREATE_CARD_COLLECTION, CardCollectionActionTypes } from '../types/cardcollection';
+import { CardCollection, FLIP_CARD_COLLECTION, MOVE_CARD_COLLECTION,
+  CREATE_CARD_COLLECTION, CardCollectionActionTypes } from '../types/cardcollection';
 
 export function flipCardCollection(cardId: string): CardCollectionActionTypes {
   return {

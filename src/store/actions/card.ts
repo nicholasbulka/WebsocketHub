@@ -3,7 +3,7 @@ import { Vec3 } from '../types/util';
 
 import { Card, FLIP_CARD, MOVE_CARD, CREATE_CARD, CardActionTypes } from '../types/card';
 
-export const flipCard = (cardId: string, faceUp: boolean) : CardActionTypes  => {
+export const flipCard = (cardId: string, faceUp: boolean) : CardActionTypes => {
   return {
     type: FLIP_CARD,
     cardId,

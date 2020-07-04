@@ -1,5 +1,6 @@
 // src/store/types/card.ts
 import { Vec3 } from './util';
+import { AnyAction } from 'redux';
 
 export interface Card {
   suit: string
@@ -20,20 +21,20 @@ export const FLIP_CARD = 'FLIP_CARD';
 export const MOVE_CARD = 'MOVE_CARD';
 export const CREATE_CARD = 'CREATE_CARD';
 
-interface FlipCard {
+interface FlipCard extends AnyAction{
   type: typeof FLIP_CARD
   cardId: string
   faceUp: boolean
 }
 
 
-interface MoveCard {
+interface MoveCard extends AnyAction{
   type: typeof MOVE_CARD
   cardId: string
   location: Vec3
 }
 
-interface CreateCard {
+interface CreateCard extends AnyAction{
   type: typeof CREATE_CARD
   card: Card
 }

@@ -1,4 +1,5 @@
 // src/store/types/chat.ts
+ import { AnyAction } from 'redux';
 
 export interface TextMessage {
   user: string
@@ -8,23 +9,16 @@ export interface TextMessage {
 
 }
 
-export interface ChatState {
+export interface ChatState{
   messages: TextMessage[]
 }
 
-export const SEND_MESSAGE = 'SEND_MESSAGE'
+export const SEND_TEXT_MESSAGE = 'SEND_TEXT_MESSAGE'
 export const DELETE_MESSAGE = 'DELETE_MESSAGE'
 
-interface SendMessageAction {
-  type: typeof SEND_MESSAGE
-  payload: TextMessage
+interface SendTextMessageAction extends AnyAction{
+  type: typeof SEND_TEXT_MESSAGE
+  textMessage: TextMessage
 }
 
-interface DeleteMessageAction {
-  type: typeof DELETE_MESSAGE
-  meta: {
-    messageId: string
-  }
-}
-
-export type ChatActionTypes = SendMessageAction | DeleteMessageAction
+export type ChatActionTypes = SendTextMessageAction

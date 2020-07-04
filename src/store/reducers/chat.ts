@@ -2,8 +2,7 @@
 import {
   ChatState,
   ChatActionTypes,
-  SEND_MESSAGE,
-  DELETE_MESSAGE
+  SEND_TEXT_MESSAGE
 } from '../types/chat'
 
 const initialState: ChatState = {
@@ -15,15 +14,9 @@ const chat = (
   action: ChatActionTypes
 ): ChatState => {
   switch (action.type) {
-    case SEND_MESSAGE:
+    case SEND_TEXT_MESSAGE:
       return {
-        messages: [...state.messages, action.payload]
-      }
-    case DELETE_MESSAGE:
-      return {
-        messages: state.messages.filter(
-          message => message.messageId !== action.meta.messageId
-        )
+        messages: [...state.messages, action.textMessage]
       }
     default:
       return state

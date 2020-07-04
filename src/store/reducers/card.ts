@@ -1,7 +1,8 @@
 // src/store/reducers/chat.ts
+import { AnyAction, Reducer } from 'redux';
+
 import {
   CardState,
-  CardActionTypes,
   FLIP_CARD,
   MOVE_CARD,
   CREATE_CARD
@@ -11,7 +12,7 @@ const initialState: CardState = {
   cards: []
 }
 
-const cards = ( state = initialState, action: CardActionTypes ): CardState => {
+const cards : Reducer<CardState, AnyAction> = ( state = initialState, action: AnyAction ): CardState => {
   switch (action.type) {
     case FLIP_CARD:
       return {

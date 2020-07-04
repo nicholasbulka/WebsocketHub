@@ -1,5 +1,4 @@
 import * as ws from 'ws';
-import express from 'express';
 import { isJSON } from '../util/util';
 
 const users : {username: string, socket : ws}[] = [];
@@ -23,7 +22,7 @@ const isUsernameTaken = (username : string) => {
   return taken;
 }
 
-const RoomController = (socket : ws, req : express.Request) => {
+const SocketController = (socket : ws ) => {
 
   sendMessage(socket, {some:"message"});
 
@@ -63,4 +62,4 @@ const RoomController = (socket : ws, req : express.Request) => {
   })
 }
 
-export default RoomController;
+export default SocketController;

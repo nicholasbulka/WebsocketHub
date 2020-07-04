@@ -2,7 +2,6 @@
 import {
   CardCollectionState,
   CardCollectionActionTypes,
-  FLIP_CARD_COLLECTION,
   MOVE_CARD_COLLECTION,
   CREATE_CARD_COLLECTION
 } from '../types/cardcollection'

@@ -4,7 +4,6 @@ import * as https from 'https';
 import * as dotenv from "dotenv";
 import expressWs from 'express-ws';
 import express from 'express';
-import logger  from './util/logger';
 import roomRouter from './routes/router';
 
 dotenv.config();
