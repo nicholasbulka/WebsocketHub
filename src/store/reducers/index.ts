@@ -1,6 +1,7 @@
 import {
-	combineReducers, Store, createStore, applyMiddleware
+	combineReducers, Store, createStore, applyMiddleware, AnyAction
 } from 'redux';
+import { ThunkDispatch} from 'redux-thunk';
 import thunkMiddleware from 'redux-thunk';
 
 
@@ -8,18 +9,25 @@ import user from './users';
 import chat from './chat';
 import card from './card';
 import cardcollection from './cardcollection';
+import rpc from './rpc';
 
 export const reducers = combineReducers({
 	user,
   chat,
   card,
-  cardcollection
+  cardcollection,
+  rpc
 })
 
 
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-export const reducerStore = () : Store => {
+export type TAppState = ReturnType<typeof reducers>;
+export type TDispatch = ThunkDispatch<TAppState, void, AnyAction>;
+export type TStore = Store<TAppState, AnyAction> & { dispatch: TDispatch };
+export type TGetState = () => TAppState;
+
+export const reducerStore = () : TStore => {
   // create the composing function for our middlewares
   const composeEnhancers = composeWithDevTools({});
 

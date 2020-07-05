@@ -1,5 +1,6 @@
 import logger from './logger';
 import { Item } from '../store/types/util';
+import { RpcDataPoint } from '../store/types/rpc';
 
 export const isJSON = (str : string|ArrayBuffer|Buffer|Buffer[]) => {
     try {
@@ -14,11 +15,23 @@ export const isJSON = (str : string|ArrayBuffer|Buffer|Buffer[]) => {
 }
 
 export const randomItemId = (restricted : Item[]) : string => {
+    const rand = Math.floor(Math.random() * 1000000).toString();
+    console.log(rand);
+    if (restricted.filter(e => e.itemId === rand).length === 0) {
+        return rand.toString();
+    }
+
+    else {
+        return randomItemId(restricted);
+    }
+}
+
+export const randomRpcId = (restricted : RpcDataPoint[]) : string => {
 
     const rand = Math.floor(Math.random() * 10000).toString();
-    if (restricted.filter(e => e.itemId === rand).length > 0) {
+    if (restricted.filter(e => e.rpcId === rand).length === 0) {
         return rand.toString();
     } else {
-        return randomItemId(restricted);
+        return randomRpcId(restricted);
     }
 }

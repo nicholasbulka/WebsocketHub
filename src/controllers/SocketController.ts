@@ -1,7 +1,54 @@
 import * as ws from 'ws';
-import { isJSON, randomItemId } from '../util/util';
+import { isJSON, randomItemId, randomRpcId } from '../util/util';
 import { reducerStore } from '../store/reducers';
 import { User } from '../store/types/users';
+import { RpcNotification } from '../store/types/rpc';
+import { sendRpcNotification } from '../store/actions/rpc';
+
+// npm start creates server but this doesn't run upfront.
+// runs when someone joins server at /room/:id
+const SocketController = (socket : ws ) => {
+
+  const store = reducerStore();
+  const id = randomItemId(store.getState().user.users);
+  const dateNow = Date.now();
+
+  const user : User = {
+    socket,
+    username: 'user-' + id,
+    joined: dateNow,
+    log: 'created : ' + dateNow.toString(),
+    lastActivity: 'created : ' + dateNow.toString(),
+    role: 'user',
+    userId: '001'+id,
+    itemId: id,
+    location: {x:1,y:2,z:0}
+  }
+
+  const rpc : RpcNotification = {
+    jsonrpc: "2.0",
+    params: {update:"New Websocket"},
+    rpcId: randomRpcId(store.getState().rpc.history),
+    timestamp:Date.now()
+  }
+
+  store.dispatch({type: "ADD_USER", user});
+  store.dispatch(sendRpcNotification(rpc, socket));
+
+  socket.on('message', (msg : string|Buffer|ArrayBuffer|Buffer[]) => {
+    store.dispatch(sendRpcNotification(rpc, socket));
+
+    if(isJSON(msg) === false) {
+      return;
+    }
+
+  });
+}
+
+export default SocketController;
+
+
+
 
 const users : {username: string, socket : ws}[] = [];
 
@@ -23,11 +70,11 @@ const isUsernameTaken = (username : string) => {
   }
   return taken;
 }
-
+/*
 const SocketController = (socket : ws ) => {
 
   const store = reducerStore();
-  const id = randomItemId(store.getState().users);
+  const id = randomItemId(store.getState().user.users);
   const dateNow = Date.now();
 
   const user : User = {
@@ -78,6 +125,4 @@ const SocketController = (socket : ws ) => {
         break;
     }
   })
-}
-
-export default SocketController;
+}*/

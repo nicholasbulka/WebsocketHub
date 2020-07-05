@@ -42,5 +42,4 @@ server.listen(process.env.PORT);
 
 const wsInstance : expressWs.Instance = expressWs(eApp, server);
 
-
 wsInstance.app.use('/room', roomRouter);

@@ -1,6 +1,7 @@
 // src/store/actions/chat.ts
-import { AnyAction, } from 'redux';
-import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { TDispatch, TAppState, /*TGetState*/} from '../reducers';
+import { AnyAction } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 import logger from '../../util/logger';
 import { isJSON } from '../../util/util';
 import * as ws from 'ws';
@@ -9,40 +10,41 @@ import { RpcRequest, RpcResponse, RpcNotification,
         SEND_RPC_REQUEST, SEND_RPC_RESPONSE, SEND_RPC_NOTIFICATION,
         RpcActionTypes } from '../types/rpc';
 
-export const sendRpcRequest = (rpc: RpcRequest): RpcActionTypes => {
+export const sendRpcRequest = (rpc: RpcRequest, socket : ws): RpcActionTypes => {
   return {
     type: SEND_RPC_REQUEST,
-    rpc
+    rpc,
+    socket
   }
 }
 
-export const sendRpcResponse = (rpc: RpcResponse): RpcActionTypes => {
+export const sendRpcResponse = (rpc: RpcResponse, socket : ws): RpcActionTypes => {
   return {
     type: SEND_RPC_RESPONSE,
-    rpc
+    rpc,
+    socket
+
   }
 }
 
-type RootState = {};
-type ExtraArg = undefined;
-type ThunkResult<R> = ThunkAction<R, RootState, ExtraArg, AnyAction>;
-type BasicThunkDispatch = ThunkDispatch<RootState, ExtraArg, AnyAction>;
 
-export const sendRpcNotification = (rpc: RpcNotification): ThunkResult<void> =>
-  (dispatch, getState) => {     // nameless functions
+export const sendRpcNotification = (rpc: RpcNotification, socket: ws): ThunkAction<void,
+                                                            TAppState,
+                                                            any,
+                                                            AnyAction> =>
+  (dispatch: TDispatch, /*getState: TGetState*/) => {     // nameless functions
 
     // const socket = getState().socket;
-    const sendMessage = (socket : ws, data : object) => {
 
-      if(isJSON(JSON.stringify(data)) === false) {
-        logger.info(JSON.stringify(data));
+      if(isJSON(JSON.stringify(rpc)) === false) {
+        logger.info(JSON.stringify(rpc));
       }
 
       const d = JSON.stringify({
-        ...data
+        ...rpc
       });
+
       dispatch({ type: SEND_RPC_NOTIFICATION, rpc });
       return socket.send(d);
 
-    }
   }

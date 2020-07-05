@@ -1,12 +1,13 @@
 // src/store/types/rpcmessage.ts
 import { AnyAction } from 'redux';
+import * as ws from 'ws';
 
 
 // see https://en.wikipedia.org/wiki/JSON-RPC
 
 export interface RpcDataPoint {
   jsonrpc:string
-  storeId: string
+  rpcId: string
   timestamp: number
 }
 
@@ -36,16 +37,19 @@ export const SEND_RPC_NOTIFICATION = 'SEND_RPC_NOTIFICATION'
 interface SendRpcRequest extends AnyAction {
   type: typeof SEND_RPC_REQUEST
   rpc: RpcRequest
+  socket: ws
 }
 
 interface SendRpcResponse extends AnyAction {
   type: typeof SEND_RPC_RESPONSE
   rpc: RpcResponse
+  socket: ws
 }
 
 interface SendRpcNotification extends AnyAction {
   type: typeof SEND_RPC_NOTIFICATION
   rpc: RpcNotification
+  socket: ws
 }
 
 export type RpcActionTypes = SendRpcRequest | SendRpcResponse | SendRpcNotification
