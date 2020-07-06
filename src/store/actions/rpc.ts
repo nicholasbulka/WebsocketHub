@@ -6,29 +6,10 @@ import logger from '../../util/logger';
 import { isJSON } from '../../util/util';
 import * as ws from 'ws';
 
-import { RpcRequest, RpcResponse, RpcNotification,
-        SEND_RPC_REQUEST, SEND_RPC_RESPONSE, SEND_RPC_NOTIFICATION,
-        RpcActionTypes } from '../types/rpc';
+import { Rpc,
+        SEND_RPC } from '../types/rpc';
 
-export const sendRpcRequest = (rpc: RpcRequest, socket : ws): RpcActionTypes => {
-  return {
-    type: SEND_RPC_REQUEST,
-    rpc,
-    socket
-  }
-}
-
-export const sendRpcResponse = (rpc: RpcResponse, socket : ws): RpcActionTypes => {
-  return {
-    type: SEND_RPC_RESPONSE,
-    rpc,
-    socket
-
-  }
-}
-
-
-export const sendRpcNotification = (rpc: RpcNotification, socket: ws): ThunkAction<void,
+export const sendRpc = (rpc: Rpc, socket: ws): ThunkAction<void,
                                                             TAppState,
                                                             any,
                                                             AnyAction> =>
@@ -40,11 +21,14 @@ export const sendRpcNotification = (rpc: RpcNotification, socket: ws): ThunkActi
         logger.info(JSON.stringify(rpc));
       }
 
-      const d = JSON.stringify({
+      const data = JSON.stringify({
         ...rpc
       });
+      console.log('in send rpc');
+      console.log(rpc);
+      console.log('---');
 
-      dispatch({ type: SEND_RPC_NOTIFICATION, rpc });
-      return socket.send(d);
+      dispatch({ type: SEND_RPC, rpc });
+      return socket.send(data);
 
   }

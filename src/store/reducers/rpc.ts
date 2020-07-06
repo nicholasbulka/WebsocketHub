@@ -3,9 +3,7 @@ import { AnyAction, Reducer } from 'redux';
 
 import {
   RpcState,
-  SEND_RPC_REQUEST,
-  SEND_RPC_RESPONSE,
-  SEND_RPC_NOTIFICATION
+  SEND_RPC
 } from '../types/rpc'
 
 const initialState: RpcState = {
@@ -14,15 +12,7 @@ const initialState: RpcState = {
 
 const history: Reducer<RpcState, AnyAction> = ( state = initialState, action: AnyAction ): RpcState => {
   switch (action.type) {
-    case SEND_RPC_REQUEST:
-      return {
-        history: [ ...state.history, action.rpc]
-      }
-    case SEND_RPC_RESPONSE:
-      return {
-        history: [ ...state.history, action.rpc]
-      }
-    case SEND_RPC_NOTIFICATION:
+    case SEND_RPC:
       return {
         history: [ ...state.history, action.rpc]
       }

@@ -1,6 +1,7 @@
 // src/store/reducers/users.ts
+import { AnyAction, Reducer } from 'redux';
+
 import {
-  UserActionTypes,
   UsersState,
   SET_USER_ROLE,
   SET_LAST_USER_ACTIVITY,
@@ -11,7 +12,7 @@ const initialState: UsersState = {
   users: []
 }
 
-const users = (state = initialState, action : UserActionTypes): UsersState => {
+const users : Reducer<UsersState, AnyAction> = (state = initialState, action : AnyAction): UsersState => {
 	switch (action.type) {
 
   case ADD_USER:

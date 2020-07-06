@@ -5,51 +5,38 @@ import * as ws from 'ws';
 
 // see https://en.wikipedia.org/wiki/JSON-RPC
 
-export interface RpcDataPoint {
+export interface Rpc {
   jsonrpc:string
   rpcId: string
+  userId: string
   timestamp: number
 }
 
-export interface RpcRequest extends RpcDataPoint{
+export interface RpcRequest extends Rpc{
   id: string
   method: string
   params: object
 }
 
-export interface RpcResponse extends RpcDataPoint{
+export interface RpcResponse extends Rpc{
   id: string
   result: string
 }
 
-export interface RpcNotification extends RpcDataPoint{
+export interface RpcNotification extends Rpc{
   params: object
 }
 
 export interface RpcState {
-  history: RpcDataPoint[]
+  history: Rpc[]
 }
 
-export const SEND_RPC_REQUEST = 'SEND_RPC_REQUEST'
-export const SEND_RPC_RESPONSE = 'SEND_RPC_RESPONSE'
-export const SEND_RPC_NOTIFICATION = 'SEND_RPC_NOTIFICATION'
+export const SEND_RPC = 'SEND_RPC'
 
-interface SendRpcRequest extends AnyAction {
-  type: typeof SEND_RPC_REQUEST
-  rpc: RpcRequest
+interface SendRpc extends AnyAction {
+  type: typeof SEND_RPC
+  rpc: Rpc
   socket: ws
 }
 
-interface SendRpcResponse extends AnyAction {
-  type: typeof SEND_RPC_RESPONSE
-  rpc: RpcResponse
-  socket: ws
-}
-
-interface SendRpcNotification extends AnyAction {
-  type: typeof SEND_RPC_NOTIFICATION
-  rpc: RpcNotification
-  socket: ws
-}
-
-export type RpcActionTypes = SendRpcRequest | SendRpcResponse | SendRpcNotification
+export type RpcActionTypes = SendRpc

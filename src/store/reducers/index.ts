@@ -1,7 +1,7 @@
 import {
 	combineReducers, Store, createStore, applyMiddleware, AnyAction
 } from 'redux';
-import { ThunkDispatch} from 'redux-thunk';
+import { ThunkDispatch } from 'redux-thunk';
 import thunkMiddleware from 'redux-thunk';
 
 

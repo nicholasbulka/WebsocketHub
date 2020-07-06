@@ -1,7 +1,9 @@
 // src/store/reducers/cardcollection.ts
+
+import { AnyAction, Reducer } from 'redux';
+
 import {
   CardCollectionState,
-  CardCollectionActionTypes,
   MOVE_CARD_COLLECTION,
   CREATE_CARD_COLLECTION
 } from '../types/cardcollection'
@@ -10,7 +12,7 @@ const initialState: CardCollectionState = {
   cardCollections: []
 }
 
-const cards = ( state = initialState, action: CardCollectionActionTypes ): CardCollectionState => {
+const cards : Reducer<CardCollectionState, AnyAction> = ( state = initialState, action: AnyAction ): CardCollectionState => {
   switch (action.type) {
     case MOVE_CARD_COLLECTION:
       return {

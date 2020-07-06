@@ -1,7 +1,9 @@
 // src/store/reducers/chat.ts
+
+import { AnyAction, Reducer } from 'redux';
+
 import {
   ChatState,
-  ChatActionTypes,
   SEND_TEXT_MESSAGE
 } from '../types/chat'
 
@@ -9,9 +11,9 @@ const initialState: ChatState = {
   messages: []
 }
 
-const chat = (
+const chat : Reducer<ChatState, AnyAction> = (
   state = initialState,
-  action: ChatActionTypes
+  action: AnyAction
 ): ChatState => {
   switch (action.type) {
     case SEND_TEXT_MESSAGE:

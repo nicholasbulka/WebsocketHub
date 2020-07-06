@@ -2,7 +2,7 @@ import express from 'express';
 import expressWs from 'express-ws';
 import SocketController from '../controllers/SocketController';
 
-const callToSetRouter : expressWs.Instance = expressWs(express());
+expressWs(express());
 const roomRouter = express.Router();
 
 roomRouter.ws(
