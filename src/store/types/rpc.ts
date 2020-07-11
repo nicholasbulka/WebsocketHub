@@ -12,10 +12,14 @@ export interface Rpc {
   timestamp: number
 }
 
+export interface Params {
+  [ propname : string ] : string
+}
+
 export interface RpcRequest extends Rpc{
   id: string
   method: string
-  params: object
+  params: Params
 }
 
 export interface RpcResponse extends Rpc{
@@ -24,7 +28,7 @@ export interface RpcResponse extends Rpc{
 }
 
 export interface RpcNotification extends Rpc{
-  params: object
+  params: Params
 }
 
 export interface RpcState {

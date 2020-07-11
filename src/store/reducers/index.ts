@@ -3,6 +3,8 @@ import {
 } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import thunkMiddleware from 'redux-thunk';
+import logger from 'redux-logger'
+
 
 
 import user from './users';
@@ -35,6 +37,6 @@ export const reducerStore = () : TStore => {
   // we'll be passing from our entry point.
   return createStore(
     reducers,
-    composeEnhancers(applyMiddleware(thunkMiddleware)),
+    composeEnhancers(applyMiddleware(thunkMiddleware, logger)),
   );
 }

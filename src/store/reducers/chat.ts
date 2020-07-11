@@ -4,7 +4,8 @@ import { AnyAction, Reducer } from 'redux';
 
 import {
   ChatState,
-  SEND_TEXT_MESSAGE
+  SEND_TEXT_MESSAGE,
+  MESSAGE_ALL
 } from '../types/chat'
 
 const initialState: ChatState = {
@@ -16,7 +17,7 @@ const chat : Reducer<ChatState, AnyAction> = (
   action: AnyAction
 ): ChatState => {
   switch (action.type) {
-    case SEND_TEXT_MESSAGE:
+    case MESSAGE_ALL:
       return {
         messages: [...state.messages, action.textMessage]
       }

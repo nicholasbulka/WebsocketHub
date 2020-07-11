@@ -5,6 +5,9 @@ import * as dotenv from "dotenv";
 import expressWs from 'express-ws';
 import express from 'express';
 import roomRouter from './routes/router';
+import ticketRouter from './routes/ticket';
+import { validateHeader } from './validation/header';
+
 
 dotenv.config();
 
@@ -37,9 +40,23 @@ switch(env){
   }
 
 }
+server.on('upgrade', (request, socket, head) => {
+
+  console.log(request.headers.authorization);
+
+  const validationResult = validateHeader(request.headers.authorization);
+  if (!validationResult){
+      socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+      socket.destroy();
+      return;
+    }
+
+});
 
 server.listen(process.env.PORT);
+eApp.listen(process.env.PORT2);
 
 const wsInstance : expressWs.Instance = expressWs(eApp, server);
 
 wsInstance.app.use('/room', roomRouter);
+eApp.use('/ticket', ticketRouter);
