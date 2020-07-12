@@ -5,18 +5,17 @@ import RoomController from '../controllers/RoomController';
 
 
 expressWs(express());
-export const roomRouter = express.Router();
-export const socketRouter = express.Router();
+const wsrouter = express.Router();
 
-/*
-socketRouter.ws(
+
+wsrouter.ws(
     '/:id', RoomController
-
-);*/
-
-socketRouter.ws(
-    '/:id/:userId', SocketController
-
 );
 
-export default socketRouter
+wsrouter.ws(
+    '/:id/:userId', SocketController
+);
+
+
+
+export { wsrouter }

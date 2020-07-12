@@ -9,6 +9,8 @@ import { sendRpc } from '../store/actions/rpc';
 import { SERVERID, USERPREFIX } from '../util/constants';
 import { ADD_USER } from '../store/types/users'
 import { v4 as uuidv4 } from 'uuid';
+import { Request } from 'express';
+import { store } from './RoomController';
 
 import MessageController from './MessageController';
 import ErrorController from './ErrorController';
@@ -18,28 +20,23 @@ import CloseController from './CloseController';
 // '/:id/:userId', SocketController
 
 
-const store = reducerStore();
+const SocketController = (socket : ws, req : Request) : void => {
 
-const SocketController = (socket : ws, req : Express.Request) : void => {
+  // console.log(store.getState());
 
-  console.log(ws);
-
-  // console.log(req);
-  // console.log('in socket');
   const id = uuidv4();
-  const id2 = uuidv4();
+  const username = 'user-' + id;
+  const rpcId = uuidv4();
 
-  // ws.id = id; want to do something like this < -----
+  // channels
+  // ws.id = userId; want to do something like this < -----
 
-  // console.log(req);
-  // console.log(req);
-  // 001 prefix for users.
-  const userId = USERPREFIX + id;
+  const userId = req.params.userId;
   const dateNow = Date.now();
 
   const user : User = {
     socket,
-    username: 'user-' + id,
+    username,
     joined: dateNow,
     log: 'created : ' + dateNow.toString(),
     lastActivity: 'created : ' + dateNow.toString(),
@@ -51,21 +48,25 @@ const SocketController = (socket : ws, req : Express.Request) : void => {
 
   const rpc : RpcNotification = {
     jsonrpc: "2.0",
+    method: 'newConnection',
     params: {
-      updateMessage: "New Websocket Connection: " + userId,
+      updateMessage: "New Websocket Connection: " + username,
+      userName: username
     },
-    rpcId: id2,
-    userId: USERPREFIX + SERVERID,
+    rpcId,
+    userId,
     timestamp: Date.now()
   }
 
   store.dispatch({type: ADD_USER, user});
   store.dispatch(sendRpc(rpc, socket));
+  // console.log(store.getState());
+  console.log('socketcontroller');
 
   socket.on('message', (msg : string|Buffer|ArrayBuffer|Buffer[]) => {
 
     // {"json-rpc":"2.0", "method":"greet", "params":{"message":"hello"}}
-    store.dispatch(sendRpc(rpc, socket));
+    // store.dispatch(sendRpc(rpc, socket));
 
     if(isJSON(msg) === false) {
       logger.log('info', 'catch error %s', msg);
@@ -77,14 +78,12 @@ const SocketController = (socket : ws, req : Express.Request) : void => {
   });
 
   socket.on('error', (error : Error) => {
-    store.dispatch(sendRpc(rpc, socket));
 
-    ErrorController(socket, error);
+    // ErrorController(socket, error);
 
   });
 
   socket.on('close', (code : number, reason : string) => {
-    // store.dispatch(sendRpc(rpc, socket));
 
     // CloseController(socket, code, reason);
 

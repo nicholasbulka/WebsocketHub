@@ -4,7 +4,7 @@ import * as https from 'https';
 import * as dotenv from "dotenv";
 import expressWs from 'express-ws';
 import express from 'express';
-import roomRouter from './routes/router';
+import { wsrouter } from './routes/router';
 import ticketRouter from './routes/ticket';
 import { validateHeader } from './validation/header';
 
@@ -58,5 +58,5 @@ eApp.listen(process.env.PORT2);
 
 const wsInstance : expressWs.Instance = expressWs(eApp, server);
 
-wsInstance.app.use('/room', roomRouter);
+wsInstance.app.use('/room', wsrouter);
 eApp.use('/ticket', ticketRouter);

@@ -29,6 +29,7 @@ export interface RpcResponse extends Rpc{
 
 export interface RpcNotification extends Rpc{
   params: Params
+  method: string
 }
 
 export interface RpcState {

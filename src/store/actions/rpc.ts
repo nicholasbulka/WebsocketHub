@@ -15,7 +15,6 @@ export const sendRpc = (rpc: Rpc, socket: ws): ThunkAction<void,
                                                             AnyAction> =>
   (dispatch: TDispatch, /*getState: TGetState*/) => {     // nameless functions
 
-    // const socket = getState().socket;
 
       if(isJSON(JSON.stringify(rpc)) === false) {
         logger.info(JSON.stringify(rpc));
@@ -24,9 +23,6 @@ export const sendRpc = (rpc: Rpc, socket: ws): ThunkAction<void,
       const data = JSON.stringify({
         ...rpc
       });
-      console.log('in send rpc');
-      console.log(rpc);
-      console.log('---');
 
       dispatch({ type: SEND_RPC, rpc });
       return socket.send(data);
