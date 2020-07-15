@@ -7,13 +7,12 @@ import express from 'express';
 import { wsrouter } from './routes/router';
 import ticketRouter from './routes/ticket';
 import { validateHeader } from './validation/header';
+import asyncRedis from 'async-redis';
 
-
+export const redisClient = asyncRedis.createClient();
 dotenv.config();
-
 const eApp: express.Application = express();
 let server: http.Server|https.Server = http.createServer();
-
 const env = process.env.ENV;
 
 switch(env){
@@ -42,11 +41,9 @@ switch(env){
 }
 server.on('upgrade', (request, socket, head) => {
 
-  console.log(request.headers.authorization);
-
   const validationResult = validateHeader(request.headers.authorization);
   if (!validationResult){
-      socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+      socket.write('HTTP/1.1 404\r\n\r\n');
       socket.destroy();
       return;
     }

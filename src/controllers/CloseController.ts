@@ -1,12 +1,17 @@
 import { sendRpc } from '../store/actions/rpc';
-import { reducerStore } from '../store/reducers';
+import { ReducerStore } from '../store/reducers';
+
 import * as ws from 'ws';
 
-const CloseController = (socket : ws, code : number, reason : string ) : void => {
-  const store = reducerStore();
+const CloseController = (store : ReducerStore, socket : ws, code : number, reason : string ) : void => {
 
-  // console.log(code);
-  // console.log(reason);
+  console.log(store.getState());
+  console.log(reason);
+  console.log(code);
+  console.log('ranhere');
+
+  // 7 15 20. pick up on close controller logic to remove users from store when they close websockets.
+  // remove associated UUID with ws connection on creation.
 
 }
 

@@ -1,21 +1,26 @@
 import express from 'express';
 import expressWs from 'express-ws';
 import SocketController from '../controllers/SocketController';
-import RoomController from '../controllers/RoomController';
-
+import { redisClient } from '../index'
 
 expressWs(express());
 const wsrouter = express.Router();
 
+const getRedisStore = async (key : string) => {
+  return await redisClient.get(key);
+}
+
+wsrouter.use("/:roomId/:userId", async (req, res, next) => {
+    const key = req.params.roomId;
+    getRedisStore(key).then((result : string | boolean) => {
+      req.redisStore = result;
+      next();
+    });
+  })
 
 wsrouter.ws(
-    '/:id', RoomController
+    '/:roomId/:userId', SocketController
 );
-
-wsrouter.ws(
-    '/:id/:userId', SocketController
-);
-
 
 
 export { wsrouter }

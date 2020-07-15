@@ -2,78 +2,68 @@ import * as ws from 'ws';
 import { isJSON } from '../util/util';
 import logger from '../util/logger';
 
-import { reducerStore } from '../store/reducers';
+import { reducerStore, ReducerStore } from '../store/reducers';
 import { User } from '../store/types/users';
 import { RpcNotification } from '../store/types/rpc';
 import { sendRpc } from '../store/actions/rpc';
+// import { updateStoreInRedis } from '../store/actions/meta';
 import { SERVERID, USERPREFIX } from '../util/constants';
 import { ADD_USER } from '../store/types/users'
 import { v4 as uuidv4 } from 'uuid';
 import { Request } from 'express';
-import { store } from './RoomController';
+import { redisClient } from '../index'
 
 import MessageController from './MessageController';
 import ErrorController from './ErrorController';
 import CloseController from './CloseController';
 
-// npm start creates server but this doesn't run upfront.
-// '/:id/:userId', SocketController
-
-
+// move all of this into a Store controller 7/14/2020
 const SocketController = (socket : ws, req : Request) : void => {
 
-  // console.log(store.getState());
+  // main store, ensure this gets passed to everything.
+  const store = req.redisStore != null ? reducerStore(JSON.parse(req.redisStore.toString())) : reducerStore({rediskey:req.params.roomId});
 
-  const id = uuidv4();
-  const username = 'user-' + id;
-  const rpcId = uuidv4();
 
-  // channels
-  // ws.id = userId; want to do something like this < -----
 
-  const userId = req.params.userId;
+
   const dateNow = Date.now();
 
   const user : User = {
     socket,
-    username,
+    username: req.params.userId,
     joined: dateNow,
     log: 'created : ' + dateNow.toString(),
     lastActivity: 'created : ' + dateNow.toString(),
     role: 'user',
-    userId,
-    itemId: id,
+    userId: '25',
+    itemId: '24',
     location: {x:1,y:2,z:0}
   }
 
-  const rpc : RpcNotification = {
-    jsonrpc: "2.0",
-    method: 'newConnection',
-    params: {
-      updateMessage: "New Websocket Connection: " + username,
-      userName: username
-    },
-    rpcId,
-    userId,
-    timestamp: Date.now()
-  }
-
   store.dispatch({type: ADD_USER, user});
-  store.dispatch(sendRpc(rpc, socket));
-  // console.log(store.getState());
-  console.log('socketcontroller');
+  // console.log(store.getState().user.users.length + ' length');
+    // end 7/12/20 update dispatch function to call updatestoreinredis every time.
+    // store.dispatch(updateStoreInRedis(req.params.roomId));
 
   socket.on('message', (msg : string|Buffer|ArrayBuffer|Buffer[]) => {
 
+  /*  clients.forEach((client) => {
+      console.log(client);
+      console.log('client');
+      client.socket.send(msg);
+    });*/
+
     // {"json-rpc":"2.0", "method":"greet", "params":{"message":"hello"}}
+
     // store.dispatch(sendRpc(rpc, socket));
+    socket.send('hello');
 
     if(isJSON(msg) === false) {
       logger.log('info', 'catch error %s', msg);
       return;
     }
-
-    MessageController(socket, msg);
+    // store.dispatch(updateStoreInRedis(req.params.roomId));
+  //  MessageController(socket, msg);
 
   });
 
@@ -85,7 +75,7 @@ const SocketController = (socket : ws, req : Request) : void => {
 
   socket.on('close', (code : number, reason : string) => {
 
-    // CloseController(socket, code, reason);
+    CloseController(store, socket, code, reason);
 
   });
 

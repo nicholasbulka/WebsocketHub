@@ -4,9 +4,11 @@ import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { TDispatch, TAppState, TGetState} from '../reducers';
 import { sendRpc } from './rpc';
-import { TextMessage, SEND_TEXT_MESSAGE, MESSAGE_ALL, ChatActionTypes } from '../types/chat';
+import { TextMessage, MESSAGE_ALL } from '../types/chat';
+import { UPDATE_STORE_IN_REDIS } from '../types/util';
 import { RpcResponse } from '../types/rpc';
 import { v4 as uuidv4 } from 'uuid';
+import { redisClient } from '../../index';
 
 export const sendFullStore = (textMessage: TextMessage, senderId: string): ThunkAction<void,
                                                             TAppState,
@@ -27,7 +29,23 @@ export const sendFullStore = (textMessage: TextMessage, senderId: string): Thunk
 
     };
 
+    // get the store with redis.
+
     dispatch({type: MESSAGE_ALL, message: textMessage});
     return users.map(user => sendRpc(rpc, user.socket));
+
+}
+
+export const updateStoreInRedis = (key: string): ThunkAction<void,
+                                                            TAppState,
+                                                            any,
+                                                            AnyAction> =>
+(dispatch: TDispatch, getState: TGetState) => {     // nameless functions
+
+    const storeValue = JSON.stringify(getState());
+
+    dispatch({type: UPDATE_STORE_IN_REDIS, key });
+    return redisClient.set(key, storeValue);
+
 
 }
