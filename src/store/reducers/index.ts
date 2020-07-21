@@ -10,7 +10,8 @@ import chat from './chat';
 import card from './card';
 import cardcollection from './cardcollection';
 import rpc from './rpc';
-import rediskey from './rediskey'
+import rediskey from './rediskey';
+
 
 export const reducers = combineReducers({
 	rediskey,
@@ -33,8 +34,8 @@ const redisSaver : Middleware<{},any, Dispatch<AnyAction>> =
   return result;
 }
 
-
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { User } from '../types/users';
 
 export type TAppState = ReturnType<typeof reducers>;
 export type TDispatch = ThunkDispatch<TAppState, void, AnyAction>;
@@ -52,7 +53,7 @@ export const reducerStore = (initState = {}) : TStore => {
   return createStore(
     reducers,
 		initState,
-    composeEnhancers(applyMiddleware(thunkMiddleware,/* logger,*/ redisSaver )),
+    composeEnhancers(applyMiddleware(thunkMiddleware,/* logger, */redisSaver)),
   );
 }
 

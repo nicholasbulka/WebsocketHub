@@ -1,5 +1,6 @@
 // src/store/actions/user.ts
-import { User, SET_USER_ROLE, ADD_USER,  SET_LAST_USER_ACTIVITY, UserActionTypes } from '../types/users'
+import { User, SET_USER_ROLE, ADD_USER, SET_LAST_USER_ACTIVITY, UserActionTypes } from '../types/users'
+import { RpcResponse, SEND_RPC } from '../types/rpc'
 
 export const setUserRole = (userRole: string, userId: string) : UserActionTypes => {
   return {
@@ -13,6 +14,13 @@ export const addUser = (user: User) : UserActionTypes => {
   return {
     type: ADD_USER,
     user
+  }
+}
+
+export const relayUserId = (rpc : RpcResponse) => {
+  return {
+    type: SEND_RPC,
+    rpc
   }
 }
 

@@ -9,14 +9,14 @@ import * as ws from 'ws';
 import { Rpc,
         SEND_RPC } from '../types/rpc';
 
-export const sendRpc = (rpc: Rpc, socket: ws): ThunkAction<void,
+export const sendRpc = (rpc: Rpc, socket: ws | undefined): ThunkAction<void,
                                                             TAppState,
                                                             any,
                                                             AnyAction> =>
   (dispatch: TDispatch, /*getState: TGetState*/) => {     // nameless functions
 
 
-      if(isJSON(JSON.stringify(rpc)) === false) {
+      if(isJSON(JSON.stringify(rpc)) === false && typeof socket !== 'object') {
         logger.info(JSON.stringify(rpc));
       }
 
@@ -24,7 +24,12 @@ export const sendRpc = (rpc: Rpc, socket: ws): ThunkAction<void,
         ...rpc
       });
 
-      dispatch({ type: SEND_RPC, rpc });
-      return socket.send(data);
+      if(typeof socket === 'object'){
+        dispatch({ type: SEND_RPC, rpc });
+        return socket.send(data);
+      }
+      else {
+        return null;
+      }
 
   }

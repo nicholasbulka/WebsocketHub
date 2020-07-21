@@ -5,7 +5,8 @@ import {
   UsersState,
   SET_USER_ROLE,
   SET_LAST_USER_ACTIVITY,
-  ADD_USER
+  ADD_USER,
+  REMOVE_USER
 } from '../types/users'
 
 const initialState: UsersState = {
@@ -35,6 +36,11 @@ const users : Reducer<UsersState, AnyAction> = (state = initialState, action : A
           log: user.log + '\n' + action.lastActivityTime.toString() + ' : ' + action.lastActivity,
         } : user
       )
+    }
+  case REMOVE_USER:
+    return {
+      users: state.users.filter(user =>
+        user.userId !== action.userId)
     }
 	default:
 		return state

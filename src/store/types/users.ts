@@ -1,10 +1,8 @@
-import * as ws from 'ws';
 import { AnyAction } from 'redux';
 import { Item } from '../types/util';
 
 // src/store/types/user.ts
 export interface User extends Item {
-  socket: ws
   username: string
   joined: number
   log: string
@@ -18,6 +16,8 @@ export interface UsersState {
 
 export const SET_USER_ROLE = 'SET_USER_ROLE';
 export const ADD_USER = 'ADD_USER';
+export const RELAY_USER_ID = 'RELAY_USER_ID';
+export const REMOVE_USER= 'REMOVE_USER';
 export const SET_LAST_USER_ACTIVITY = 'SET_LAST_USER_ACTIVITY';
 
 interface SetUserRoleAction extends AnyAction{

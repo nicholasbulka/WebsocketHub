@@ -1,23 +1,21 @@
 // src/store/actions/chat.ts
-
+import * as ws from 'ws';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { TDispatch, TAppState, TGetState} from '../reducers';
 import { sendRpc } from './rpc';
-import { TextMessage, MESSAGE_ALL } from '../types/chat';
-import { UPDATE_STORE_IN_REDIS } from '../types/util';
-import { RpcResponse } from '../types/rpc';
+import { SEND_FULL_STORE_ALL_BUT_SENDER, SEND_FULL_STORE} from '../types/util';
+import { RpcResponse, RpcNotification, Rpc } from '../types/rpc';
+import { User } from '../types/users';
 import { v4 as uuidv4 } from 'uuid';
 import { redisClient } from '../../index';
 
-export const sendFullStore = (textMessage: TextMessage, senderId: string): ThunkAction<void,
+export const sendFullStore = (sockets: Map<string, ws>): ThunkAction<void,
                                                             TAppState,
                                                             any,
                                                             AnyAction> =>
 (dispatch: TDispatch, getState: TGetState) => {     // nameless functions
 
-    const users = getState().user.users;
-    const store = getState();
 
     const rpc : RpcResponse = {
       jsonrpc: "2.0",
@@ -25,17 +23,61 @@ export const sendFullStore = (textMessage: TextMessage, senderId: string): Thunk
       timestamp: Date.now(),
       rpcId: uuidv4(),
       id: "0010",
-      result: store.toString()
+      result: {store: JSON.stringify(getState())}
 
     };
 
     // get the store with redis.
 
-    dispatch({type: MESSAGE_ALL, message: textMessage});
-    return users.map(user => sendRpc(rpc, user.socket));
+
+    dispatch({type: SEND_FULL_STORE, rpc});
+    return sockets.forEach((value) => {
+      value.send(JSON.stringify(rpc));
+    })
 
 }
 
+export const sendFullStoreToAllButSender = (sockets: Map<string, ws>, socket: ws): ThunkAction<void,
+                                                            TAppState,
+                                                            any,
+                                                            AnyAction> =>
+(dispatch: TDispatch, getState: TGetState) => {     // nameless functions
+
+
+    const rpc : RpcResponse = {
+      jsonrpc: "2.0",
+      userId: "0010",
+      timestamp: Date.now(),
+      rpcId: uuidv4(),
+      id: "0010",
+      result: {store: JSON.stringify(getState())}
+
+    };
+
+    // get the store with redis.
+
+
+    dispatch({type: SEND_FULL_STORE_ALL_BUT_SENDER, rpc});
+    return sockets.forEach((value) => {
+      if(value !== socket){
+        value.send(JSON.stringify(rpc));
+      }
+    })
+
+}
+
+export const mapMessageToOtherSockets = (messageCallback: ((_: ws, a:Rpc) => void), map : Map<string, ws>, userId : string, rpc: Rpc) : void => {
+  map.forEach((value, key) => {
+    if(key !== userId){
+      messageCallback(value, rpc);
+    }
+  })
+
+}
+
+
+
+/* refactored as middleware
 export const updateStoreInRedis = (key: string): ThunkAction<void,
                                                             TAppState,
                                                             any,
@@ -49,3 +91,4 @@ export const updateStoreInRedis = (key: string): ThunkAction<void,
 
 
 }
+*/

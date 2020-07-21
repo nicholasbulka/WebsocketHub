@@ -8,11 +8,13 @@ import * as ws from 'ws';
 export interface Rpc {
   jsonrpc:string
   rpcId: string
-  userId: string
   timestamp: number
 }
 
 export interface Params {
+  [ propname : string ] : string
+}
+export interface Result {
   [ propname : string ] : string
 }
 
@@ -20,11 +22,13 @@ export interface RpcRequest extends Rpc{
   id: string
   method: string
   params: Params
+  userId: string
 }
 
 export interface RpcResponse extends Rpc{
   id: string
-  result: string
+  result: Result
+  userId: string
 }
 
 export interface RpcNotification extends Rpc{
