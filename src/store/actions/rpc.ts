@@ -15,7 +15,6 @@ export const sendRpc = (rpc: Rpc, socket: ws | undefined): ThunkAction<void,
                                                             AnyAction> =>
   (dispatch: TDispatch, /*getState: TGetState*/) => {     // nameless functions
 
-
       if(isJSON(JSON.stringify(rpc)) === false && typeof socket !== 'object') {
         logger.info(JSON.stringify(rpc));
       }

@@ -1,5 +1,5 @@
 import { ReducerStore } from '../../store/reducers';
-import { RpcNotification, RpcResponse } from '../../store/types/rpc';
+import { RpcNotification, RpcResponse, Rpc } from '../../store/types/rpc';
 
 import logger from '../../util/logger';
 import { chatMessageSendToAllButSender, chatMessageSenderConfirmation } from '../../store/actions/chat';
@@ -14,8 +14,11 @@ import { ClientInfo } from '../../store/types/util';
 import { sendRpc } from '../../store/actions/rpc';
 import { mapMessageToOtherSockets } from '../../store/actions/meta';
 
+// {"jsonrpc":"2.0", "method":"messageAll", "params":{"message":"hello world!"}, "id":"1"}
+
 export const ChatMessageAllController = ( clientInfo : ClientInfo, msg : string|Buffer|ArrayBuffer|Buffer[], rpcMessageAllNotification : RpcNotification, rpcMessageAllResponse : RpcResponse ) : void => {
-  clientInfo.socket.send(rpcMessageAllResponse);
-  mapMessageToOtherSockets((socket : ws) => { sendRpc(rpcMessageAllNotification, socket)}, clientInfo.socketMap, clientInfo.userId, rpcMessageAllNotification);
+
+  clientInfo.store.dispatch(sendRpc(rpcMessageAllResponse, clientInfo.socket));
+  mapMessageToOtherSockets((socket : ws) => { clientInfo.store.dispatch(sendRpc(rpcMessageAllNotification, socket))}, clientInfo.socketMap, clientInfo.userId, rpcMessageAllNotification);
 
 }

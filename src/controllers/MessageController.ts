@@ -7,9 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { ChatMessageAllController } from './methods/ChatMessageAllController';
 import { ClientInfo } from '../store/types/util';
 
-const MessageController = ( clientInfo : ClientInfo, msg : string|Buffer|ArrayBuffer|Buffer[] ) : void => {
+const MessageController = ( clientInfo : ClientInfo, msg : string ) : void => {
 
-  const parsedJSON : RpcRequest = JSON.parse(JSON.stringify(msg));
+  const parsedJSON : RpcRequest = JSON.parse(msg);
   const method = typeof parsedJSON.method !== 'undefined' ? parsedJSON.method : 'undefined method';
   const id = typeof parsedJSON.id !== 'undefined' ? parsedJSON.id : '-2';
 

@@ -57,3 +57,12 @@ const wsInstance : expressWs.Instance = expressWs(eApp, server);
 
 wsInstance.app.use('/room', wsrouter);
 eApp.use('/ticket', ticketRouter);
+
+const pid = process.pid;
+console.log(pid);
+
+process.on('SIGTERM', () => {
+  server.close(() => {
+    console.log('Process terminated : ' + pid)
+  })
+})

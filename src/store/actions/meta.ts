@@ -44,13 +44,12 @@ export const sendFullStoreToAllButSender = (sockets: Map<string, ws>, socket: ws
 (dispatch: TDispatch, getState: TGetState) => {     // nameless functions
 
 
-    const rpc : RpcResponse = {
+    const rpc : RpcNotification = {
       jsonrpc: "2.0",
-      userId: "0010",
       timestamp: Date.now(),
       rpcId: uuidv4(),
-      id: "0010",
-      result: {store: JSON.stringify(getState())}
+      params: {store: JSON.stringify(getState())},
+      method: 'storeUpdate'
 
     };
 
@@ -66,7 +65,7 @@ export const sendFullStoreToAllButSender = (sockets: Map<string, ws>, socket: ws
 
 }
 
-export const mapMessageToOtherSockets = (messageCallback: ((_: ws, a:Rpc) => void), map : Map<string, ws>, userId : string, rpc: Rpc) : void => {
+export const mapMessageToOtherSockets = (messageCallback : ((_ : ws, a : RpcNotification) => void), map : Map<string, ws>, userId : string, rpc: RpcNotification) : void => {
   map.forEach((value, key) => {
     if(key !== userId){
       messageCallback(value, rpc);

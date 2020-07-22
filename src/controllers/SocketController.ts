@@ -17,7 +17,7 @@ import CloseController from './CloseController';
 import { sendFullStore } from '../store/actions/meta';
 import { ClientInfo } from '../store/types/util';
 
-let userWebSocketMap = new Map<string, ws>();
+const roomToUserWebSocketMap = new Map<string, Map<string, ws>>();
 
 // move all of this into a Store controller 7/14/2020
 const SocketController = (socket : ws, req : Request) : void => {
@@ -28,13 +28,15 @@ const SocketController = (socket : ws, req : Request) : void => {
   const dateNow = Date.now();
 
   const userId = uuidv4();
+  const roomId = req.params.roomId;
 
   const user : User = {
-    username: 'user-' + req.params.userId,
+    username: 'user-' + userId,
     joined: dateNow,
     log: 'created : ' + dateNow.toString(),
     lastActivity: 'created : ' + dateNow.toString(),
     role: 'user',
+    room: roomId,
     userId,
     itemId: userId,
     location: {x:1,y:2,z:0}
@@ -51,9 +53,23 @@ const SocketController = (socket : ws, req : Request) : void => {
 
   }
 
+  let userWebSocketMap = new Map<string, ws>();
+  const roomMap = roomToUserWebSocketMap.get(roomId);
+
+  if(typeof roomMap === 'undefined'){
+    userWebSocketMap = new Map<string, ws>([[user.userId, socket]]);
+  }
+  else {
+    userWebSocketMap = roomMap;
+  }
+
   userWebSocketMap.set(user.userId, socket);
+  roomToUserWebSocketMap.set(roomId, userWebSocketMap);
+  console.log(roomToUserWebSocketMap);
   store.dispatch({type: ADD_USER, user});
   store.dispatch(sendRpc(rpc, socket));
+
+  // we want to make sure this only
   store.dispatch(sendFullStore(userWebSocketMap));
 
   /*const metaTypeAction : Middleware<{},any, Dispatch<AnyAction>> =
@@ -80,7 +96,7 @@ const SocketController = (socket : ws, req : Request) : void => {
 
   socket.on('message', (msg : string|Buffer|ArrayBuffer|Buffer[]) => {
 
-    if(isJSON(msg) === false) {
+    if(isJSON(msg) === false || typeof msg !== 'string') {
       logger.log('info', 'catch error %s', msg);
       return;
     }
@@ -88,6 +104,7 @@ const SocketController = (socket : ws, req : Request) : void => {
     const userIdFromWs = getUserIdFromWS(socket, userWebSocketMap);
 
     if(typeof userIdFromWs === 'string'){
+      console.log('made it to message controller call');
       const clientInfo : ClientInfo = { userId : userIdFromWs, socket, socketMap : userWebSocketMap, store };
       MessageController(clientInfo, msg);
     }

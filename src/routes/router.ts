@@ -10,7 +10,7 @@ const getRedisStore = async (key : string) => {
   return await redisClient.get(key);
 }
 
-wsrouter.use("/:roomId/:userId", async (req, res, next) => {
+wsrouter.use("/:roomId", async (req, res, next) => {
     const key = req.params.roomId;
     getRedisStore(key).then((result : string | boolean) => {
       req.redisStore = result;
@@ -19,7 +19,7 @@ wsrouter.use("/:roomId/:userId", async (req, res, next) => {
   })
 
 wsrouter.ws(
-    '/:roomId/:userId', SocketController
+    '/:roomId', SocketController
 );
 
 

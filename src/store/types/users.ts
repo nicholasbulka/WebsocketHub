@@ -8,6 +8,7 @@ export interface User extends Item {
   log: string
   lastActivity: string
   role: string
+  room: string
   userId: string
 }
 export interface UsersState {

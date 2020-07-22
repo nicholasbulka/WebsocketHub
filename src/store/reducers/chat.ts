@@ -22,10 +22,15 @@ const chat : Reducer<ChatState, AnyAction> = (
       return {
         messages: [...state.messages, action.textMessage]
       }
-      case CHAT_MESSAGE_SENDER_CONFIRMATION:
-        return {
-          messages: [...state.messages, action.textMessage]
-        }
+    case CHAT_MESSAGE_SENDER_CONFIRMATION:
+      return {
+        messages: [...state.messages, action.textMessage]
+      }
+    case SEND_TEXT_MESSAGE:
+      return {
+        messages: [...state.messages, action.textMessage]
+      }
+
     default:
       return state
   }

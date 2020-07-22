@@ -3,7 +3,7 @@ import {
 } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import thunkMiddleware from 'redux-thunk';
-import logger from 'redux-logger'
+// import logger from 'redux-logger'
 import { redisClient } from '../../index';
 import user from './users';
 import chat from './chat';
@@ -35,7 +35,6 @@ const redisSaver : Middleware<{},any, Dispatch<AnyAction>> =
 }
 
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { User } from '../types/users';
 
 export type TAppState = ReturnType<typeof reducers>;
 export type TDispatch = ThunkDispatch<TAppState, void, AnyAction>;
