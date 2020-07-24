@@ -129,7 +129,6 @@ const SocketController = (socket : ws, req : Request) : void => {
       const userSocket = userWebSocketMap.get(u.userId);
       if(userSocket === socket){
         userWebSocketMap = CloseController(store, userWebSocketMap, u.userId, code, reason);
-        console.log(userWebSocketMap);
       }
     })
 
