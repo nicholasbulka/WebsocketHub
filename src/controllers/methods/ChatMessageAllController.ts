@@ -2,7 +2,6 @@ import { ReducerStore } from '../../store/reducers';
 import { RpcNotification, RpcResponse, Rpc } from '../../store/types/rpc';
 
 import logger from '../../util/logger';
-import { chatMessageSendToAllButSender, chatMessageSenderConfirmation } from '../../store/actions/chat';
 import { SERVERID, USERPREFIX, ALL } from '../../util/constants';
 
 import { RpcRequest} from '../../store/types/rpc'

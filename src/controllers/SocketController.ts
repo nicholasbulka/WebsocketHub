@@ -23,7 +23,7 @@ const roomToUserWebSocketMap = new Map<string, Map<string, ws>>();
 const SocketController = (socket : ws, req : Request) : void => {
 
   // main store, ensure this gets passed to everything.
-  const store = typeof req.redisStore === 'string' ? reducerStore(JSON.parse(req.redisStore)) : reducerStore({rediskey:req.params.roomId});
+  const store = typeof req.redisStore === 'string' ? reducerStore(JSON.parse(JSON.stringify(req.redisStore))) : reducerStore({rediskey:req.params.roomId});
 
   const dateNow = Date.now();
 
@@ -104,7 +104,6 @@ const SocketController = (socket : ws, req : Request) : void => {
     const userIdFromWs = getUserIdFromWS(socket, userWebSocketMap);
 
     if(typeof userIdFromWs === 'string'){
-      console.log('made it to message controller call');
       const clientInfo : ClientInfo = { userId : userIdFromWs, socket, socketMap : userWebSocketMap, store };
       MessageController(clientInfo, msg);
     }

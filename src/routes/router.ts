@@ -13,7 +13,12 @@ const getRedisStore = async (key : string) => {
 wsrouter.use("/:roomId", async (req, res, next) => {
     const key = req.params.roomId;
     getRedisStore(key).then((result : string | boolean) => {
-      req.redisStore = result;
+      if(typeof result === 'string'){
+        req.redisStore = result
+      }
+      else{
+        req.redisStore = '';
+      }
       next();
     });
   })

@@ -6,27 +6,25 @@ import thunkMiddleware from 'redux-thunk';
 // import logger from 'redux-logger'
 import { redisClient } from '../../index';
 import user from './users';
-import chat from './chat';
 import card from './card';
 import cardcollection from './cardcollection';
-import rpc from './rpc';
+// import rpc from './rpc';
 import rediskey from './rediskey';
 
 
 export const reducers = combineReducers({
 	rediskey,
 	user,
-  chat,
   card,
-  cardcollection,
-  rpc
+  cardcollection
+  // rpc
 
 })
 export type RootState = ReturnType<typeof reducers>
 
 const redisSaver : Middleware<{},any, Dispatch<AnyAction>> =
 	store => next => async action  => {
-  const result = next(action)
+  const result = next(action);
 	const storeValue = JSON.stringify(store.getState());
   const key = store.getState().rediskey.toString();
 

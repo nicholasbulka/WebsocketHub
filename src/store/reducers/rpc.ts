@@ -1,5 +1,5 @@
 // src/store/reducers/rpc.ts
-import { AnyAction, Reducer } from 'redux';
+/*import { AnyAction, Reducer } from 'redux';
 
 import {
   RpcState,
@@ -21,4 +21,4 @@ const history: Reducer<RpcState, AnyAction> = ( state = initialState, action: An
   }
 }
 
-export default history;
+export default history;*/
