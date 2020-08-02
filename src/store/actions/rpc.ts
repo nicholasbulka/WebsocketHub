@@ -21,7 +21,7 @@ export const sendRpc = (rpc: Rpc, socket: ws | undefined): ThunkAction<void,
 
       const data = JSON.stringify({
         ...rpc
-      });
+      }).replace('/\\/g','');
 
       if(typeof socket === 'object'){
         dispatch({ type: SEND_RPC, rpc });

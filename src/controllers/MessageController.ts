@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { ChatMessageAllController } from './methods/ChatMessageAllController';
 import { ClientInfo } from '../store/types/util';
+import XmlHandlerController from './XmlHandlerController';
 
 const MessageController = ( clientInfo : ClientInfo, msg : string ) : void => {
 
@@ -20,7 +21,7 @@ const MessageController = ( clientInfo : ClientInfo, msg : string ) : void => {
     jsonrpc: "2.0",
     method: 'update',
     params: {
-      store: JSON.stringify(clientInfo.store.getState())
+      store: JSON.stringify(clientInfo.store.getState()).replace('/\\/g','')
     },
     rpcId: uuidv4(),
     timestamp: Date.now()
@@ -33,7 +34,7 @@ const MessageController = ( clientInfo : ClientInfo, msg : string ) : void => {
     rpcId: uuidv4(),
     id,
     result: {
-      store: JSON.stringify(clientInfo.store.getState())
+      store: JSON.stringify(clientInfo.store.getState()).replace('/\\/g','')
     }
   };
 
@@ -43,8 +44,10 @@ const MessageController = ( clientInfo : ClientInfo, msg : string ) : void => {
     case 'update':
       // console.log('update logic');
       break;
-    case 'move':
-      // console.log('move logic');
+    case 'uploadXml':
+
+      // this assumes we have a designation of "host" and guests.
+      XmlHandlerController(clientInfo, msg, /* rpcMessageNotification, */ rpcMessageResponse);
       break;
     case 'messageAll':
       ChatMessageAllController(clientInfo, msg, rpcMessageNotification, rpcMessageResponse);

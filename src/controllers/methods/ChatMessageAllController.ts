@@ -17,6 +17,13 @@ import { mapMessageToOtherSockets } from '../../store/actions/meta';
 
 export const ChatMessageAllController = ( clientInfo : ClientInfo, msg : string|Buffer|ArrayBuffer|Buffer[], rpcMessageAllNotification : RpcNotification, rpcMessageAllResponse : RpcResponse ) : void => {
 
+  if(typeof msg !== 'string'){ return };
+
+  const msgObj = JSON.parse(msg);
+
+  rpcMessageAllNotification.params = msgObj.params;
+  rpcMessageAllNotification.params.sender = clientInfo.userId;
+
   clientInfo.store.dispatch(sendRpc(rpcMessageAllResponse, clientInfo.socket));
   mapMessageToOtherSockets((socket : ws) => { clientInfo.store.dispatch(sendRpc(rpcMessageAllNotification, socket))}, clientInfo.socketMap, clientInfo.userId, rpcMessageAllNotification);
 

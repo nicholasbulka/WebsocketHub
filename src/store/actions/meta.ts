@@ -23,7 +23,7 @@ export const sendFullStore = (sockets: Map<string, ws>): ThunkAction<void,
       timestamp: Date.now(),
       rpcId: uuidv4(),
       id: "0010",
-      result: {store: JSON.stringify(getState())}
+      result: {store: JSON.stringify(getState()).replace('/\\/g','')}
 
     };
 
@@ -32,7 +32,7 @@ export const sendFullStore = (sockets: Map<string, ws>): ThunkAction<void,
 
     dispatch({type: SEND_FULL_STORE, rpc});
     return sockets.forEach((value) => {
-      value.send(JSON.stringify(rpc));
+      value.send(JSON.stringify(rpc).replace('/\\/g',''));
     })
 
 }
@@ -48,7 +48,7 @@ export const sendFullStoreToAllButSender = (sockets: Map<string, ws>, socket: ws
       jsonrpc: "2.0",
       timestamp: Date.now(),
       rpcId: uuidv4(),
-      params: {store: JSON.stringify(getState())},
+      params: {store: JSON.stringify(getState()).replace('\\','')},
       method: 'storeUpdate'
 
     };
