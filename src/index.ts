@@ -9,8 +9,14 @@ import ticketRouter from './routes/ticket';
 import { validateHeader } from './validation/header';
 import asyncRedis from 'async-redis';
 
-export const redisClient = asyncRedis.createClient();
 dotenv.config();
+
+export const redisClient = asyncRedis.createClient();
+const redisAuth = process?.env?.REDIS ?? '';
+redisClient.auth(redisAuth, (err, ok) => {
+  console.log(ok);
+});
+
 const eApp: express.Application = express();
 let server: http.Server|https.Server = http.createServer();
 const env = process.env.ENV;

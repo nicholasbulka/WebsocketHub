@@ -23,7 +23,8 @@ const roomToUserWebSocketMap = new Map<string, Map<string, ws>>();
 const SocketController = (socket : ws, req : Request) : void => {
 
   // main store, ensure this gets passed to everything.
-  const store = typeof req.redisStore === 'string' ? reducerStore(JSON.parse(JSON.stringify(req.redisStore))) : reducerStore({rediskey:req.params.roomId});
+  const checkPasses : boolean = typeof req.redisStore === 'string' && req.redisStore.length >= 1;
+  const store = checkPasses ? reducerStore(JSON.parse(JSON.stringify(req.redisStore))) : reducerStore({rediskey:req.params.roomId});
 
   const dateNow = Date.now();
 
